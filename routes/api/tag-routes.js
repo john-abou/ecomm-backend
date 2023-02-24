@@ -13,6 +13,11 @@ router.get('/', (req, res) => {
       },
     ],
   })
+  .then((dbTagData) => res.json({message: 'All tags', data: dbTagData}))
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json({error: err.message});
+  });
 });
 
 router.get('/:id', (req, res) => {
@@ -25,18 +30,66 @@ router.get('/:id', (req, res) => {
       },
     ],
   })
+  .then((dbTagData) => {
+    if (!dbTagData) {
+      res.status(404).json({message: 'No tag found with this id'});
+    } 
+    res.json({message: 'Tag found', data: dbTagData}); 
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json({error: err.message});
+  });
 });
 
 router.post('/', (req, res) => {
-  // create a new tag
+  Tag.create(req.body)
+    .then((dbTagData) => res.json({message: 'Tag created', data: dbTagData}))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({error: err.message});
+    });
 });
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
+  Tag.update( 
+    {tag_name: req.body.tag_name},
+    {
+      where: {
+        id: req.params.id
+      }
+    }
+  )
+  .then(((dbTagData) => {
+    if (!dbTagData) {
+      res.status(404).json({message: 'No tag found with this id'});
+    } 
+    res.json({message: 'Tag updated', data: dbTagData}); 
+  }))
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json({error: err.message});
+  });
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(((dbTagData) => {
+    if (!dbTagData) {
+      res.status(404).json({message: 'No tag found with this id'});
+    } 
+    res.json({message: 'Tag deleted', data: dbTagData}); 
+    }  
+  ))
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json({error: err.message});
+  });
 });
 
 module.exports = router;
