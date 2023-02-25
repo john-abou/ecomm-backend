@@ -10,18 +10,19 @@ router.get('/', async (req, res) => {
     const dbCatData = await Category.findAll(
       {
         include: {
-          Model: Product,
+          model: Product,
           attributes: ['product_name', 'price', 'stock', 'category_id']
         }
       }
     )
     if (!dbCatData) {
       res.status(404).json({message: 'No categories found'})
+    } else{
+      res.status(200).json({message: 'All categories', data: dbCatData})
     }
-    res.json({message: 'All categories', data: dbCatData})
   }
-  catch {
-    res.status(500).json({message: 'Server error'})
+  catch (err) {
+    res.status(500).json({message: 'Server error', error: err})
   }
 });
 
@@ -31,7 +32,7 @@ router.get('/:id', async (req, res) => {
   try{
     const catData = await Category.findByPk(req.params.id, {
       include: {
-        Model: Product,
+        model: Product,
         attributes: ['product_name', 'price', 'stock', 'category_id']
       }
     })
@@ -71,7 +72,7 @@ router.put('/:id', async (req, res) => {
     if (!catData) {
       res.status(404).json({message: 'No category found with this id'})
     }
-    res.status(200).json({message: 'Category updated', data: catData})
+    res.status(200).json({message: 'Category updated'})
   }
   catch {
     res.status(500).json({message: 'Server error'})
@@ -89,7 +90,7 @@ router.delete('/:id', async (req, res) => {
     if (!catData) {
       res.status(404).json({message: 'No category found with this id'})
     }
-    res.status(200).json({message: 'Category deleted', data: catData})
+    res.status(200).json({message: 'Category deleted'})
   }
   catch {
     res.status(500).json({message: 'Server error'})
