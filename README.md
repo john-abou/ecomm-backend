@@ -11,6 +11,9 @@
 - [Tests](#tests)
 - [Questions](#questions)
 
+## Deployed Link
+https://git.heroku.com/ecomm-backend-john-abou.git
+
 ## Description
 This repo was made with the intention of practicing my sequelize and express.js app. The ecommerce backend can be used to track products and create tags/categories that can be associated with those products.
 
